@@ -1,0 +1,9 @@
+{
+    "name": "otsimo",
+    "version": "0.2.0",
+    "description": "otsimo game api",
+    "repository": "https://github.com/otsimo/otsimo-js.git",
+    "author": "Sercan Degirmenci <sercan@otsimo.com>",
+    "license": "MIT",
+    "main": "otsimo.js"
+}
