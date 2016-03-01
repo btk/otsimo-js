@@ -13,7 +13,8 @@ var otsimo = function () {
         kv: {},
         child: {},
         iOS: (navigator.userAgent.match(/(iPad|iPhone|iPod)/g) ? true : false),
-        isWKWebView: false
+        isWKWebView: false,
+        sound: true
     }
 
     if (window.webkit && window.webkit.messageHandlers) {
@@ -92,6 +93,11 @@ var otsimo = function () {
     }
 
     otemp.__callSettingsCallbacks = function (settings, sound) {
+        if (settings){
+            otemp.settings = settings
+        }
+        otemp.sound = sound
+        
         for (var i = 0; i < __settingsCallbacks.length; i++) {
             __settingsCallbacks[i](settings, sound)
         }
@@ -134,11 +140,21 @@ var otsimo = function () {
     otemp.__init = function (option) {
         otemp.manifest = option.manifest
         otemp.settings = option.settings
-        otemp.kv = option.kv
         otemp.child = option.child
         otemp.width = option.screen.width
         otemp.height = option.screen.height
-        __callLoadingCallbacks()
+        otemp.sound = option.sound
+        
+        var langFile = otemp.manifest.kv_path + "/" + option.child.language + ".json"
+        getJSON(langFile, function (err, data) {
+            if (err) {
+                otemp.log("failed to get kv, status", err)
+            } else {
+                otemp.kv = data
+                otemp.log("initialized", otemp)
+                __callLoadingCallbacks()
+            }
+        })
     }
 
     otemp.__initManifest = function (err, data) {
@@ -149,8 +165,6 @@ var otsimo = function () {
             getJSON(otemp.manifest.settings, otemp.__initSettings)
         }
     }
-
-
 
     otemp.__loadKeyValueStore = function () {
         var sy = otemp.getLanguages()
