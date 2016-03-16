@@ -1,5 +1,5 @@
 
-var otsimo = function () {
+var otsimo = function() {
     "use strict";
     if (typeof otsimo !== "undefined") {
         return otsimo
@@ -12,6 +12,7 @@ var otsimo = function () {
         settings: {},
         kv: {},
         child: {},
+        debug: false,
         iOS: (navigator.userAgent.match(/(iPad|iPhone|iPod)/g) ? true : false),
         isWKWebView: false,
         isUIWebView: (typeof otsimonative !== 'undefined'),
@@ -21,10 +22,10 @@ var otsimo = function () {
     if (window.webkit && window.webkit.messageHandlers) {
         otemp.isWKWebView = true;
     }
-    
-    var getJSON = function (url, res) {
+
+    var getJSON = function(url, res) {
         var xmlhttp = new XMLHttpRequest();
-        xmlhttp.onreadystatechange = function () {
+        xmlhttp.onreadystatechange = function() {
             var status;
             var data;
             if (xmlhttp.readyState == 4) {
@@ -41,11 +42,11 @@ var otsimo = function () {
         xmlhttp.send();
     }
 
-    var __registerLoadingCallback = function (fn) {
+    var __registerLoadingCallback = function(fn) {
         __callbackStack.push(fn)
     }
 
-    var __callLoadingCallbacks = function () {
+    var __callLoadingCallbacks = function() {
         __isloaded = true
         for (var i = 0; i < __callbackStack.length; i++) {
             __callbackStack[i]()
@@ -54,7 +55,7 @@ var otsimo = function () {
     }
 
 
-    otemp.log = function () {
+    otemp.log = function() {
         if (otemp.isWKWebView) {
             console.log.apply(console, arguments)
             window.webkit.messageHandlers.console.postMessage(JSON.stringify(arguments));
@@ -62,7 +63,7 @@ var otsimo = function () {
             console.log.apply(console, arguments)
         }
     }
-    otemp.customevent = function (eventName, data) {
+    otemp.customevent = function(eventName, data) {
         if (otemp.isWKWebView) {
             window.webkit.messageHandlers.analytics.postMessage({ event: eventName, data: data });
         } else if (otemp.isUIWebView) {
@@ -72,7 +73,7 @@ var otsimo = function () {
         }
     }
 
-    otemp.quitgame = function () {
+    otemp.quitgame = function() {
         if (otemp.isWKWebView) {
             window.webkit.messageHandlers.player.postMessage({ event: "quitgame" });
         } else if (otemp.isUIWebView) {
@@ -82,7 +83,7 @@ var otsimo = function () {
         }
     }
 
-    otemp.run = function (fn) {
+    otemp.run = function(fn) {
         otemp.log("register function to run")
 
         if (__isloaded) {
@@ -94,11 +95,11 @@ var otsimo = function () {
         }
     }
 
-    otemp.onSettingsChanged = function (fn) {
+    otemp.onSettingsChanged = function(fn) {
         __settingsCallbacks.push(fn)
     }
 
-    otemp.__callSettingsCallbacks = function (settings, sound) {
+    otemp.__callSettingsCallbacks = function(settings, sound) {
         if (settings) {
             otemp.settings = settings
         }
@@ -109,7 +110,7 @@ var otsimo = function () {
         }
     }
 
-    otemp.init = function () {
+    otemp.init = function() {
         otemp.log("initialize of bundle otsimo.js")
 
         if (otemp.isWKWebView) {
@@ -127,10 +128,11 @@ var otsimo = function () {
         otemp.child.language = otemp.getLanguages()[0]
         otemp.width = 1024
         otemp.height = 768
+        otemp.debug = true
         getJSON("otsimo.json", otemp.__initManifest)
     }
 
-    otemp.getLanguages = function () {
+    otemp.getLanguages = function() {
         var found = []
         if (typeof navigator !== 'undefined') {
             if (navigator.languages) { // chrome only; not an array, so can't use .push.apply instead of iterating
@@ -148,7 +150,7 @@ var otsimo = function () {
         return found
     }
 
-    otemp.__init = function (option) {
+    otemp.__init = function(option) {
         otemp.log("__init called", option)
         otemp.settings = option.settings
         otemp.child = option.child
@@ -157,13 +159,13 @@ var otsimo = function () {
         otemp.sound = option.sound
         otemp.root = option.root
 
-        getJSON(otemp.root + "otsimo.json", function (err, manifest) {
+        getJSON(otemp.root + "otsimo.json", function(err, manifest) {
             if (err) {
                 otemp.log("Failed to get otsimo.json, status=", err)
             } else {
                 otemp.manifest = manifest
                 var langFile = otemp.root + manifest.kv_path + "/" + otemp.child.language + ".json"
-                getJSON(langFile, function (err, data) {
+                getJSON(langFile, function(err, data) {
                     if (err) {
                         otemp.log("failed to get kv, status", err)
                     } else {
@@ -177,7 +179,7 @@ var otsimo = function () {
         return true
     }
 
-    otemp.__initManifest = function (err, data) {
+    otemp.__initManifest = function(err, data) {
         if (err) {
             otemp.log("Failed to get otsimo.json, status=", err)
         } else {
@@ -186,9 +188,9 @@ var otsimo = function () {
         }
     }
 
-    otemp.__loadKeyValueStore = function () {
+    otemp.__loadKeyValueStore = function() {
         var sy = otemp.getLanguages()
-        var langFile = otemp.manifest.kv_path + "/general.json"
+        var langFile = otemp.manifest.kv_path + "/" + otemp.manifest.default_language + ".json"
 
         if (sy.length > 0) {
             for (var i = 0; i < sy.length; ++i) {
@@ -199,7 +201,7 @@ var otsimo = function () {
                 }
             }
         }
-        getJSON(langFile, function (err, data) {
+        getJSON(langFile, function(err, data) {
             if (err) {
                 otemp.log("failed to get kv, status", err)
             } else {
@@ -210,7 +212,7 @@ var otsimo = function () {
         })
     }
 
-    otemp.__initSettings = function (err, data) {
+    otemp.__initSettings = function(err, data) {
         if (err) {
             otemp.log("failed to get settings,status", err)
         } else {
