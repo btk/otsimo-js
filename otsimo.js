@@ -14,13 +14,14 @@ var otsimo = function () {
         child: {},
         iOS: (navigator.userAgent.match(/(iPad|iPhone|iPod)/g) ? true : false),
         isWKWebView: false,
+        isUIWebView: (typeof otsimonative !== 'undefined'),
         sound: true
     }
 
     if (window.webkit && window.webkit.messageHandlers) {
         otemp.isWKWebView = true;
     }
-
+    
     var getJSON = function (url, res) {
         var xmlhttp = new XMLHttpRequest();
         xmlhttp.onreadystatechange = function () {
@@ -28,7 +29,7 @@ var otsimo = function () {
             var data;
             if (xmlhttp.readyState == 4) {
                 status = xmlhttp.status;
-                if (status == 200) {
+                if (status === 200 || status === 0) {
                     data = JSON.parse(xmlhttp.responseText);
                     res && res(null, data);
                 } else {
@@ -55,16 +56,17 @@ var otsimo = function () {
 
     otemp.log = function () {
         if (otemp.isWKWebView) {
+            console.log.apply(console, arguments)
             window.webkit.messageHandlers.console.postMessage(JSON.stringify(arguments));
         } else {
             console.log.apply(console, arguments)
         }
     }
     otemp.customevent = function (eventName, data) {
-        otemp.log("customevent", eventName, data)
         if (otemp.isWKWebView) {
-            otemp.log("ANALYTICS customevent", eventName)
             window.webkit.messageHandlers.analytics.postMessage({ event: eventName, data: data });
+        } else if (otemp.isUIWebView) {
+            otsimonative.customevent({ event: eventName, data: data })
         } else {
             otemp.log("customevent", eventName, data)
         }
@@ -73,12 +75,16 @@ var otsimo = function () {
     otemp.quitgame = function () {
         if (otemp.isWKWebView) {
             window.webkit.messageHandlers.player.postMessage({ event: "quitgame" });
+        } else if (otemp.isUIWebView) {
+            otsimonative.player({ event: "quitgame" })
         } else {
             otemp.log("quit game called")
         }
     }
 
     otemp.run = function (fn) {
+        otemp.log("register function to run")
+
         if (__isloaded) {
             if (fn) {
                 fn()
@@ -111,6 +117,11 @@ var otsimo = function () {
             return
         }
 
+        if (otemp.isUIWebView) {
+            otemp.log("sandbox won't be initializing")
+            return
+        }
+
         otemp.child.firstname = "debug"
         otemp.child.lastname = "user"
         otemp.child.language = otemp.getLanguages()[0]
@@ -138,18 +149,20 @@ var otsimo = function () {
     }
 
     otemp.__init = function (option) {
+        otemp.log("__init called", option)
         otemp.settings = option.settings
         otemp.child = option.child
         otemp.width = option.screen.width
         otemp.height = option.screen.height
         otemp.sound = option.sound
+        otemp.root = option.root
 
-        getJSON("otsimo.json", function (err, manifest) {
+        getJSON(otemp.root + "otsimo.json", function (err, manifest) {
             if (err) {
                 otemp.log("Failed to get otsimo.json, status=", err)
             } else {
                 otemp.manifest = manifest
-                var langFile = manifest.kv_path + "/" + otemp.child.language + ".json"
+                var langFile = otemp.root + manifest.kv_path + "/" + otemp.child.language + ".json"
                 getJSON(langFile, function (err, data) {
                     if (err) {
                         otemp.log("failed to get kv, status", err)
