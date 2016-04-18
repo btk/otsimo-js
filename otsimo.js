@@ -1,4 +1,3 @@
-
 var otsimo = function() {
     "use strict";
     if (typeof otsimo !== "undefined") {
@@ -54,7 +53,6 @@ var otsimo = function() {
         __callbackStack.splice(0, __callbackStack.length)
     }
 
-
     otemp.log = function() {
         if (otemp.isWKWebView) {
             console.log.apply(console, arguments)
@@ -63,6 +61,7 @@ var otsimo = function() {
             console.log.apply(console, arguments)
         }
     }
+
     otemp.customevent = function(eventName, data) {
         if (otemp.isWKWebView) {
             window.webkit.messageHandlers.analytics.postMessage({ event: eventName, data: data });
