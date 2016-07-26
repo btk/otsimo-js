@@ -186,6 +186,7 @@ var otsimo = function () {
             }
         }
     }
+
     function makeid(length) {
         if (!length) {
             length = 5
@@ -196,6 +197,7 @@ var otsimo = function () {
             text += possible.charAt(Math.floor(Math.random() * possible.length));
         return text;
     }
+
     otemp.__addSaveCallback = function (callback) {
         var id = makeid(4)
         __saveCallbacks.push({ id: id, callback: callback })
@@ -301,5 +303,26 @@ var otsimo = function () {
             otemp.__loadKeyValueStore()
         }
     }
+    otemp.tts = { __driver: null }
+    otemp.tts.speak = function (text) {
+        if (otemp.tts.__driver) {
+            return otemp.tts.__driver.speak(text);
+        }
+        return new Error("TTS Driver is null")
+    }
+    otemp.tts.setVoice = function (voice) {
+        if (otemp.tts.__driver) {
+            return otemp.tts.__driver.setVoice(text);
+        }
+        return new Error("TTS Driver is null")
+    }
+    otemp.tts.getVoice = function () {
+        if (otemp.tts.__driver) {
+            return otemp.tts.__driver.getVoice();
+        }
+        return new Error("TTS Driver is null")
+    }
+    otemp.tts.setDriver = function (driver) { otemp.tts.__driver = driver; }
+    otemp.tts.getDriver = function () { return otemp.tts.__driver; }
     return otemp
 } ()
