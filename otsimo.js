@@ -17,7 +17,7 @@ var otsimo = function () {
         sound: true
     }
 
-    Object.defineProperty(otemp, "isWKWebView", { value: (window.webkit && window.webkit.messageHandlers) });
+    Object.defineProperty(otemp, "isWKWebView", { value: !!(window.webkit && window.webkit.messageHandlers) });
     Object.defineProperty(otemp, "isUIWebView", { value: (typeof otsimonative !== 'undefined') });
     Object.defineProperty(otemp, "iOS", { value: (navigator.userAgent.match(/(iPad|iPhone|iPod)/g) ? true : false) });
 
@@ -175,7 +175,7 @@ var otsimo = function () {
             otsimonative.loadLocalSettings(callback)
         } else {
             try {
-                var stada = localStorage.getItem(otemp.__storageKey());
+                var sdata = localStorage.getItem(otemp.__storageKey());
                 var data = JSON.parse(sdata)
                 callback(null, data);
             } catch (err) {
@@ -205,7 +205,7 @@ var otsimo = function () {
         return otemp.manifest.unique_name
     }
 
-    otemp.__callSaveCallback = function (data, err, id) {
+    otemp.__callSaveCallback = function (err, data, id) {
         for (var i = 0; i < __saveCallbacks.length; i++) {
             var cc = ___saveCallbacks[i]
             if (cc.id == id) {
@@ -305,25 +305,25 @@ var otsimo = function () {
         if (tts.__driver) {
             return tts.__driver.speak(text);
         }
-        return new Error("TTS Driver is null")
+        return new Error("TTS Driver is not set")
     }
     tts.setVoice = function (voice) {
         if (tts.__driver) {
             return tts.__driver.setVoice(text);
         }
-        return new Error("TTS Driver is null")
+        return new Error("TTS Driver is not set")
     }
     tts.getVoice = function () {
         if (tts.__driver) {
             return tts.__driver.getVoice();
         }
-        return new Error("TTS Driver is null")
+        return new Error("TTS Driver is not set")
     }
     tts.voiceList = function () {
         if (tts.__driver) {
             return tts.__driver.voiceList();
         }
-        return new Error("TTS Driver is null")
+        return new Error("TTS Driver is not set")
     }
     tts.setDriver = function (driver) { tts.__driver = driver; }
     tts.getDriver = function () { return tts.__driver; }
