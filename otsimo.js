@@ -309,7 +309,7 @@ var otsimo = function () {
     }
     tts.setVoice = function (voice) {
         if (tts.__driver) {
-            return tts.__driver.setVoice(text);
+            return tts.__driver.setVoice(voice);
         }
         return new Error("TTS Driver is not set")
     }

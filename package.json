@@ -1,6 +1,6 @@
 {
     "name": "otsimo",
-    "version": "1.2.0",
+    "version": "1.2.1",
     "description": "otsimo game api",
     "repository": "https://github.com/otsimo/otsimo-js.git",
     "author": "Sercan Degirmenci <sercan@otsimo.com>",
