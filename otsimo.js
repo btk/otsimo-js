@@ -129,6 +129,11 @@ var otsimo = function () {
         otemp.child.language = options.language || otemp.getLanguages()[0]
         otemp.width = options.width || 1024
         otemp.height = options.height || 768
+        if (options.capabilities && Array === options.capabilities.constructor) {
+            Object.defineProperty(otemp, "capabilities", { value: options.capabilities });
+        } else {
+            Object.defineProperty(otemp, "capabilities", { value: ["sandbox"] });
+        }
         if (typeof options.debug != "undefined" && options.debug == false) {
             otemp.debug = false
         } else {
@@ -233,7 +238,11 @@ var otsimo = function () {
         otemp.height = option.screen.height
         otemp.sound = option.sound
         otemp.root = option.root
-
+        if (option.capabilities && Array === option.capabilities.constructor) {
+            Object.defineProperty(otemp, "capabilities", { value: options.capabilities });
+        } else {
+            Object.defineProperty(otemp, "capabilities", { value: ["sandbox"] });
+        }
         getJSON(otemp.root + "otsimo.json", function (err, manifest) {
             if (err) {
                 otemp.log("Failed to get otsimo.json, status=", err)
