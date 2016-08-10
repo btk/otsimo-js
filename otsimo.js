@@ -230,15 +230,15 @@ var otsimo = function () {
         }
     }
 
-    otemp.__init = function (option) {
-        otemp.log("__init called", option)
-        otemp.settings = option.settings
-        otemp.child = option.child
-        otemp.width = option.screen.width
-        otemp.height = option.screen.height
-        otemp.sound = option.sound
-        otemp.root = option.root
-        if (option.capabilities && Array === option.capabilities.constructor) {
+    otemp.__init = function (options) {
+        otemp.log("__init called", options)
+        otemp.settings = options.settings
+        otemp.child = options.child
+        otemp.width = options.screen.width
+        otemp.height = options.screen.height
+        otemp.sound = options.sound
+        otemp.root = options.root
+        if (options.capabilities && Array === options.capabilities.constructor) {
             Object.defineProperty(otemp, "capabilities", { value: options.capabilities });
         } else {
             Object.defineProperty(otemp, "capabilities", { value: ["sandbox"] });
