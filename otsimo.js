@@ -274,9 +274,10 @@ var otsimo = function () {
 
     otemp.__loadKeyValueStore = function () {
         var sy = otemp.getLanguages()
-        var langFile = otemp.manifest.kv_path + "/" + otemp.manifest.default_language + ".json"
+        var lang = otemp.child.language || otemp.manifest.default_language;
+        var langFile = otemp.manifest.kv_path + "/" + lang + ".json"
 
-        if (sy.length > 0) {
+        if (sy.length > 0 && !otemp.child.language) {
             for (var i = 0; i < sy.length; ++i) {
                 var nextLang = otemp.manifest.languages[sy[i].substring(0, 2)];
                 if (nextLang) {
