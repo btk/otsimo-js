@@ -7,6 +7,7 @@ var otsimo = function () {
     var __callbackStack = [];
     var __settingsCallbacks = [];
     var __saveCallbacks = []
+    var __resolutionCallbacks = [];
 
     var otemp = {
         settings: {},
@@ -97,6 +98,10 @@ var otsimo = function () {
         __settingsCallbacks.push(fn)
     }
 
+    otemp.onResolutionChanged = function(fn){
+        __resolutionCallbacks.push(fn)
+    }
+
     otemp.__callSettingsCallbacks = function (settings, sound) {
         if (settings) {
             otemp.settings = settings
@@ -105,6 +110,12 @@ var otsimo = function () {
 
         for (var i = 0; i < __settingsCallbacks.length; i++) {
             __settingsCallbacks[i](settings, sound)
+        }
+    }
+
+    otemp.__callResolutionCallbacks = function (width, height, orientation) {
+        for (var i = 0; i < __resolutionCallbacks.length; i++) {
+            __resolutionCallbacks[i](width, height, orientation)
         }
     }
 
