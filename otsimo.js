@@ -141,12 +141,12 @@ var otsimo = function() {
         }
         otemp.log("initialize of bundle otsimo.js")
 
-        if (otemp.isWKWebView && options.isTestApp) {
+        if (otemp.isWKWebView && !options.isTestApp) {
             otemp.log("sandbox won't be initializing")
             return
         }
 
-        if (otemp.isUIWebView && options.isTestApp) {
+        if (otemp.isUIWebView && !options.isTestApp) {
             otemp.log("sandbox won't be initializing")
             return
         }
