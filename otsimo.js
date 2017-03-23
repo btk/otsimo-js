@@ -26,6 +26,8 @@ var otsimo = function () {
     value: (navigator.userAgent.match(/(iPad|iPhone|iPod)/g) ? true : false)
   });
 
+  Object.defineProperty(otemp, 'android', { value: /OtsimoChildApp\/[0-9\.]+$/.test(navigator.userAgent) })
+
   var getJSON = function (url, res) {
     var xmlhttp = new XMLHttpRequest();
     xmlhttp.onreadystatechange = function () {
@@ -72,6 +74,8 @@ var otsimo = function () {
         event: eventName,
         data: data
       });
+    } else if (otemp.android) {
+      window.postMessage(JSON.stringify({ action: "customevent", event: eventName, data: data }));
     } else {
       otemp.log("customevent", eventName, data)
     }
@@ -82,6 +86,8 @@ var otsimo = function () {
       window.webkit.messageHandlers.player.postMessage({
         event: "quitgame"
       });
+    } else if (otemp.android) {
+      window.postMessage(JSON.stringify({ action: "quitgame" }));
     } else {
       otemp.log("quit game called")
     }
@@ -130,7 +136,7 @@ var otsimo = function () {
     }
     otemp.log("initialize of bundle otsimo.js")
 
-    if (otemp.isWKWebView && !options.isTestApp) {
+    if ((otemp.isWKWebView && !options.isTestApp) || otemp.android) {
       otemp.log("sandbox won't be initializing")
       return
     }
@@ -174,6 +180,11 @@ var otsimo = function () {
         found.push(navigator.language);
       }
     }
+    for (var iif; iif < found.length; iif++) {
+      if (found[iif].indexOf("-") > -1) {
+        found[iif] = found[iif].split("-")[0];
+      }
+    }
     return found
   }
 
@@ -184,6 +195,8 @@ var otsimo = function () {
         event: "save",
         data: sdata
       });
+    } else if (otemp.android) {
+      window.postMessage(JSON.stringify({ action: "save", event: 'save', data: data }));
     } else {
       otemp.log("saveLocalSettings", data)
       localStorage.setItem(otemp.__storageKey(), sdata);
@@ -374,4 +387,4 @@ var otsimo = function () {
     writable: false
   });
   return otemp
-} ()
+}()
