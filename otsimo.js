@@ -69,15 +69,21 @@ var otsimo = function () {
   }
 
   otemp.customevent = function (eventName, data) {
+    const nd = {};
+    Object.keys(data).forEach(function (k) {
+      if (typeof data[k] !== 'undefined') {
+        nd[k] = data[k];
+      }
+    });
     if (otemp.isWKWebView) {
       window.webkit.messageHandlers.analytics.postMessage({
         event: eventName,
-        data: data
+        data: nd
       });
     } else if (otemp.android) {
-      window.postMessage(JSON.stringify({ action: "customevent", event: eventName, data: data }));
+      window.postMessage(JSON.stringify({ action: "customevent", event: eventName, data: nd }));
     } else {
-      otemp.log("customevent", eventName, data)
+      otemp.log("customevent", eventName, nd)
     }
   }
 
@@ -180,7 +186,7 @@ var otsimo = function () {
         found.push(navigator.language);
       }
     }
-    for (var iif; iif < found.length; iif++) {
+    for (var iif = 0; iif < found.length; iif++) {
       if (found[iif].indexOf("-") > -1) {
         found[iif] = found[iif].split("-")[0];
       }
