@@ -6,7 +6,7 @@ var otsimo = function () {
   var __isloaded = false;
   var __callbackStack = [];
   var __settingsCallbacks = [];
-  var __saveCallbacks = []
+  var __saveCallbacks = [];
   var __resolutionCallbacks = [];
 
   var otemp = {
@@ -229,7 +229,7 @@ var otsimo = function () {
 
   function makeid(length) {
     if (!length) {
-      length = 5
+      length = 5;
     }
     var text = "";
     var possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
