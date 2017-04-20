@@ -28,6 +28,20 @@ var otsimo = function () {
 
   Object.defineProperty(otemp, 'android', { value: /OtsimoChildApp\/[0-9\.]+$/.test(navigator.userAgent) })
 
+  if (otemp.android) {
+    document.addEventListener('message', function (e) {
+      try {
+        var messageData = JSON.parse(e.data);
+        var fn = otemp[messageData.func];
+        if (typeof fn === 'function') {
+          fn.call(otemp, messageData.args);
+        }
+      } catch (err) {
+        console.warn(err);
+      }
+    });
+  }
+
   var getJSON = function (url, res) {
     var xmlhttp = new XMLHttpRequest();
     xmlhttp.onreadystatechange = function () {
