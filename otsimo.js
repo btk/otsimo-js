@@ -34,7 +34,7 @@ var otsimo = function () {
         var messageData = JSON.parse(e.data);
         var fn = otemp[messageData.func];
         if (typeof fn === 'function') {
-          fn.call(otemp, messageData.args);
+          fn.apply(otemp, messageData.args);
         }
       } catch (err) {
         console.warn(err);
@@ -77,6 +77,8 @@ var otsimo = function () {
     if (otemp.isWKWebView) {
       console.log.apply(console, arguments)
       window.webkit.messageHandlers.console.postMessage(JSON.stringify(arguments));
+    } else if (otemp.android) {
+      window.postMessage(JSON.stringify({ "action": "log", "arguments": arguments }));
     } else {
       console.log.apply(console, arguments)
     }
