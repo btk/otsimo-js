@@ -78,28 +78,28 @@ var otsimo = function () {
       console.log.apply(console, arguments)
       window.webkit.messageHandlers.console.postMessage(JSON.stringify(arguments));
     } else if (otemp.android) {
-      window.postMessage(JSON.stringify({ "action": "log", "arguments": arguments }));
+      window.postMessage(JSON.stringify({ "action": "log", "arguments": arguments }), "*");
     } else {
       console.log.apply(console, arguments)
     }
   }
 
   otemp.customevent = function (eventName, data) {
-    const nd = {};
+    var _nd = {};
     Object.keys(data).forEach(function (k) {
       if (typeof data[k] !== 'undefined') {
-        nd[k] = data[k];
+        _nd[k] = data[k];
       }
     });
     if (otemp.isWKWebView) {
       window.webkit.messageHandlers.analytics.postMessage({
         event: eventName,
-        data: nd
+        data: _nd
       });
     } else if (otemp.android) {
-      window.postMessage(JSON.stringify({ action: "customevent", event: eventName, data: nd }));
+      window.postMessage(JSON.stringify({ action: "customevent", event: eventName, data: _nd }), "*");
     } else {
-      otemp.log("customevent", eventName, nd)
+      otemp.log("customevent", eventName, _nd)
     }
   }
 
@@ -109,7 +109,7 @@ var otsimo = function () {
         event: "quitgame"
       });
     } else if (otemp.android) {
-      window.postMessage(JSON.stringify({ action: "quitgame" }));
+      window.postMessage(JSON.stringify({ action: "quitgame" }), "*");
     } else {
       otemp.log("quit game called")
     }
@@ -218,7 +218,7 @@ var otsimo = function () {
         data: sdata
       });
     } else if (otemp.android) {
-      window.postMessage(JSON.stringify({ action: "save", event: 'save', data: data }));
+      window.postMessage(JSON.stringify({ action: "save", event: 'save', data: data }), "*");
     } else {
       otemp.log("saveLocalSettings", data)
       localStorage.setItem(otemp.__storageKey(), sdata);
