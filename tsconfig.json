@@ -10,6 +10,7 @@
         "target": "es5",
         "module": "umd",
         "sourceMap": true,
+        //   "outFile": "bundle.js",
         "lib": [
             "dom",
             "es2015"
