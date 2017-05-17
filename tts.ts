@@ -1,4 +1,4 @@
-interface TTSDriver {
+export interface TTSDriver {
   speak(text: string): void;
   voiceList(): string[];
   getVoice(): string;

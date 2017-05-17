@@ -35,6 +35,6 @@ node_modules
 .DS_Store
 *.db
 bower_components/
-/out
+/dist
 /bundle.js
 /bundle.js.map

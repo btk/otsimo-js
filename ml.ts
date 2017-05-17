@@ -1,5 +1,5 @@
 
-type InputSource = "camera" | "mic" | "image" | "audio";
+export type InputSource = "camera" | "mic" | "image" | "audio";
 
 export class ML {
     loadGraph(filepath: string) {

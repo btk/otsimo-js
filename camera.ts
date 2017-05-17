@@ -1,5 +1,5 @@
 
-interface CameraOpenOptions {
+export interface CameraOpenOptions {
     x?: number;
     y?: number;
     width?: number;

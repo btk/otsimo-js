@@ -4,7 +4,7 @@ import { Speech } from './speech';
 import { Camera } from './camera';
 import { ML } from './ml';
 
-interface Child {
+export interface Child {
     firstname: string;
     lastname: string;
     id: string;
@@ -12,7 +12,7 @@ interface Child {
     language: string;
 }
 
-interface InitOptions {
+export interface InitOptions {
     firstname?: string
     lastname?: string
     childid?: string;
@@ -34,7 +34,7 @@ interface NativeInitOptions {
     screen: { width: number, height: number }
 }
 
-interface GameManifest {
+export interface GameManifest {
     unique_name: string;
     kv_path: string;
     settings: string;
@@ -58,15 +58,15 @@ function navigatorLanguages(nav: any): string[] {
     return found;
 }
 
-interface SettingsCallback {
+export interface SettingsCallback {
     (setting: any, sound: boolean): void;
 }
 
-interface ResoulutionCallback {
+export interface ResoulutionCallback {
     (width: number, height: number, orientation: string): void;
 }
 
-class OtsimoHelper {
+export class OtsimoHelper {
     settings: Object = {}
     kv: any = null
     child: Child = null;

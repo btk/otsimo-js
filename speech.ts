@@ -1,11 +1,11 @@
-interface SpeechConfiguration {
+export interface SpeechConfiguration {
     shouldReportPartialResults?: boolean
 }
 
-interface SpeechRecognitionResult {
+export interface SpeechRecognitionResult {
 }
 
-interface SpeechRecognitionResultCallback {
+export interface SpeechRecognitionResultCallback {
     (result: SpeechRecognitionResult): void;
 }
 
