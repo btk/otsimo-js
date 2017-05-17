@@ -1,11 +1,12 @@
 {
     "name": "otsimo",
-    "version": "1.7.5",
+    "version": "1.7.6",
     "description": "otsimo game api",
     "repository": "https://github.com/otsimo/otsimo-js.git",
     "author": "Sercan Degirmenci <sercan@otsimo.com>",
     "license": "MIT",
     "main": "dist/otsimo.js",
+    "types": "dist/otsimo.d.ts",
     "scripts": {
         "prepublish": "tsc"
     },
