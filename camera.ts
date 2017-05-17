@@ -1,4 +1,4 @@
-
+import { Otsimo } from './common';
 export interface CameraOpenOptions {
     x?: number;
     y?: number;
@@ -7,15 +7,16 @@ export interface CameraOpenOptions {
     fullscreen?: boolean;
 }
 export class Camera {
-    openCamera(options: CameraOpenOptions) {
 
+    constructor(private otsimo: Otsimo<any, any, any, any>) { }
+
+    openCamera(options: CameraOpenOptions) {
     }
 
     closeCamera() {
-
     }
 
     canAccessCamera(cb: (result: boolean) => void) {
-
+        cb(false);
     }
 }

@@ -3,27 +3,7 @@ import { TTS } from './tts';
 import { Speech } from './speech';
 import { Camera } from './camera';
 import { ML } from './ml';
-
-export interface Child {
-    firstname: string;
-    lastname: string;
-    id: string;
-    gameid: string;
-    language: string;
-}
-
-export interface InitOptions {
-    firstname?: string
-    lastname?: string
-    childid?: string;
-    gameid?: string;
-    language?: string;
-    width?: number;
-    height?: number;
-    capabilities?: string[];
-    debug?: boolean;
-    isTestApp?: boolean;
-}
+import { Child, GameManifest, Otsimo, InitOptions, SettingsCallback, ResoulutionCallback } from './common';
 
 interface NativeInitOptions {
     child: Child;
@@ -32,14 +12,6 @@ interface NativeInitOptions {
     root: string;
     capabilities?: string[];
     screen: { width: number, height: number }
-}
-
-export interface GameManifest {
-    unique_name: string;
-    kv_path: string;
-    settings: string;
-    languages: string[];
-    default_language: string;
 }
 
 function navigatorLanguages(nav: any): string[] {
@@ -58,24 +30,16 @@ function navigatorLanguages(nav: any): string[] {
     return found;
 }
 
-export interface SettingsCallback {
-    (setting: any, sound: boolean): void;
-}
-
-export interface ResoulutionCallback {
-    (width: number, height: number, orientation: string): void;
-}
-
-export class OtsimoHelper {
+export class OtsimoHelper implements Otsimo<ML, TTS, Camera, Speech> {
     settings: Object = {}
     kv: any = null
     child: Child = null;
     manifest: GameManifest = null;
 
     private _tts = new TTS();
-    private _ml = new ML();
-    private _camera = new Camera();
-    private _speech = new Speech();
+    private _ml = new ML(this);
+    private _camera = new Camera(this);
+    private _speech = new Speech(this);
 
     private _debug = false
     private _sound = true
@@ -195,12 +159,92 @@ export class OtsimoHelper {
         this._resoulutionCallbacks.push(cb);
     }
 
+    getAllUrlParams() {
+        // get query string from url (optional) or window
+        let queryString = window.location.search.slice(1);
+
+        // we'll store the parameters here
+        let obj = {};
+        // if query string exists
+        if (queryString) {
+
+            // stuff after # is not part of query string, so get rid of it
+            queryString = queryString.split('#')[0];
+
+            // split our query string into its component parts
+            var arr = queryString.split('&');
+
+            for (var i = 0; i < arr.length; i++) {
+                // separate the keys and the values
+                var a = arr[i].split('=');
+
+                // in case params look like: list[]=thing1&list[]=thing2
+                var paramNum = undefined;
+                var paramName = a[0].replace(/\[\d*\]/, function (v) {
+                    paramNum = v.slice(1, -1);
+                    return '';
+                });
+
+                // set parameter value (use 'true' if empty)
+                var paramValue = typeof (a[1]) === 'undefined' ? 'true' : a[1];
+
+                // (optional) keep case consistent
+                paramName = paramName.toLowerCase();
+                paramValue = paramValue.toLowerCase();
+
+                // if parameter name already exists
+                if (obj[paramName]) {
+                    // convert value to array (if still string)
+                    if (typeof obj[paramName] === 'string') {
+                        obj[paramName] = [obj[paramName]];
+                    }
+                    // if no array index number specified...
+                    if (typeof paramNum === 'undefined') {
+                        // put the value on the end of the array
+                        obj[paramName].push(paramValue);
+                    }
+                    // if array index number specified...
+                    else {
+                        // put the value at that index number
+                        obj[paramName][paramNum] = paramValue;
+                    }
+                }
+                // if param name doesn't exist yet, set it
+                else {
+                    obj[paramName] = paramValue;
+                }
+            }
+        }
+        return obj;
+    }
+
     init(options?: InitOptions) {
         if (!options) {
             options = {};
         }
         this.log("initialize the bundle otsimo.js")
         if ((this.isWKWebView && !options.isTestApp) || this.android) {
+            let params = this.getAllUrlParams();
+            if (params['by_url'] === "1" || params['by_url'] === "true") {
+                this.__init({
+                    child: {
+                        firstname: params["firstname"],
+                        lastname: params["lastname"],
+                        id: params["id"],
+                        gameid: params["gameid"],
+                        language: params["language"],
+                    },
+                    capabilities: params['capabilities'],
+                    sound: params["sound"] === "true" || params["sound"] === "1",
+                    settings: JSON.parse(params["settings"]),
+                    root: params["root"] || "",
+                    screen: {
+                        width: Number(params["width"]),
+                        height: Number(params["height"]),
+                    }
+                });
+                return;
+            }
             this.log("sandbox won't be initializing")
             return
         }

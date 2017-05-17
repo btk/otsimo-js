@@ -1,3 +1,5 @@
+import { Otsimo } from './common';
+
 export interface SpeechConfiguration {
     shouldReportPartialResults?: boolean
 }
@@ -10,6 +12,8 @@ export interface SpeechRecognitionResultCallback {
 }
 
 export class Speech {
+    constructor(private otsimo: Otsimo<any, any, any, any>) { }
+
     authorizationStatus(cb: (status: any) => void) {
     }
 
