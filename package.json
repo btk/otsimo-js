@@ -5,10 +5,11 @@
     "repository": "https://github.com/otsimo/otsimo-js.git",
     "author": "Sercan Degirmenci <sercan@otsimo.com>",
     "license": "MIT",
-    "main": "bundle.js",
+    "main": "./out/otsimo.js",
     "scripts": {
         "build": "./node_modules/.bin/tsc",
-        "prepublish": "/node_modules/.bin/tsc"
+        "prepublish": "/node_modules/.bin/tsc",
+        "install": "/node_modules/.bin/tsc"
     },
     "devDependencies": {
         "typescript": "^2.3.2"
