@@ -1,0 +1,19 @@
+{
+    "files": [
+        "otsimo.ts",
+        "tts.ts",
+        "speech.ts",
+        "camera.ts",
+        "ml.ts"
+    ],
+    "compilerOptions": {
+        "target": "es5",
+        "module": "umd",
+        "sourceMap": true,
+        "lib": [
+            "dom",
+            "es2015"
+        ],
+        "outDir": "./out"
+    }
+}
