@@ -94,7 +94,6 @@ export class OtsimoHelper {
         }
     }
 
-
     get ml(): ML {
         return this._ml;
     }
@@ -381,3 +380,4 @@ export class OtsimoHelper {
 }
 
 export const otsimo = new OtsimoHelper();
+(window as any).otsimo = otsimo;
