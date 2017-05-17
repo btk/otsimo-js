@@ -1,16 +1,18 @@
 {
     "name": "otsimo",
-    "version": "1.7.1",
+    "version": "1.7.5",
     "description": "otsimo game api",
     "repository": "https://github.com/otsimo/otsimo-js.git",
     "author": "Sercan Degirmenci <sercan@otsimo.com>",
     "license": "MIT",
-    "main": "./out/otsimo.js",
+    "main": "dist/otsimo.js",
     "scripts": {
-        "build": "node_modules/.bin/tsc",
-        "prepublish": "node_modules/.bin/tsc"
+        "prepublish": "tsc"
     },
     "devDependencies": {
         "typescript": "^2.3.2"
-    }
+    },
+    "files": [
+        "./dist"
+    ]
 }
