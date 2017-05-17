@@ -1,63 +1,49 @@
-
-
 interface TTSDriver {
-
+  speak(text: string): void;
+  voiceList(): string[];
+  getVoice(): string;
+  setVoice(voice: string): void;
 }
-
 
 export class TTS {
-    speak(text: string) {
 
-    }
-    setVoice(voice: string) {
+  private _driver: TTSDriver;
 
+  speak(text: string) {
+    if (this._driver) {
+      return this._driver.speak(text);
     }
-    getVoice(): string {
-        return "";
-    }
-    voiceList(): string[] {
-        return [];
-    }
-    setDriver(driver: TTSDriver) {
+    console.error(new Error("TTS Driver is not set"));
+  }
 
+  setVoice(voice: string) {
+    if (this._driver) {
+      return this._driver.setVoice(voice);
     }
-    getDriver(): TTSDriver {
-        return null;
+    console.error(new Error("TTS Driver is not set"));
+  }
+
+  getVoice(): string {
+    if (this._driver) {
+      return this._driver.getVoice();
     }
+    console.error(new Error("TTS Driver is not set"));
+    return "";
+  }
+
+  voiceList(): string[] {
+    if (this._driver) {
+      return this._driver.voiceList();
+    }
+    console.error(new Error("TTS Driver is not set"));
+    return [];
+  }
+
+  setDriver(driver: TTSDriver) {
+    this._driver = driver;
+  }
+
+  getDriver(): TTSDriver {
+    return this._driver;
+  }
 }
-/*
- var tts = {
-    __driver: null
-  }
-  tts.speak = function (text) {
-    if (tts.__driver) {
-      return tts.__driver.speak(text);
-    }
-    return new Error("TTS Driver is not set")
-  }
-  tts.setVoice = function (voice) {
-    if (tts.__driver) {
-      return tts.__driver.setVoice(voice);
-    }
-    return new Error("TTS Driver is not set")
-  }
-  tts.getVoice = function () {
-    if (tts.__driver) {
-      return tts.__driver.getVoice();
-    }
-    return new Error("TTS Driver is not set")
-  }
-  tts.voiceList = function () {
-    if (tts.__driver) {
-      return tts.__driver.voiceList();
-    }
-    return new Error("TTS Driver is not set")
-  }
-  tts.setDriver = function (driver) {
-    tts.__driver = driver;
-  }
-  tts.getDriver = function () {
-    return tts.__driver;
-  }
-
-*/

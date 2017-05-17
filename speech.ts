@@ -1,5 +1,3 @@
-
-
 interface SpeechConfiguration {
     shouldReportPartialResults?: boolean
 }
