@@ -410,3 +410,5 @@ var otsimo = function () {
   });
   return otemp
 }()
+
+export default otsimo;
